@@ -10,6 +10,7 @@ package toys
 import (
 	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
 )
 
@@ -45,4 +46,39 @@ func WaitStopSignal(release func()) {
 	if release != nil {
 		release()
 	}
+}
+
+// GetEnv 根据Key获取环境变量
+func GetEnv(key string) string {
+	return os.Getenv(key)
+}
+
+// SetEnv 设置环境变量
+func SetEnv(key, value string) error {
+	return os.Setenv(key, value)
+}
+
+// DelEnv 根据Key删除环境变量
+func DelEnv(key string) error {
+	return os.Unsetenv(key)
+}
+
+// GetSystem 操作系统
+func GetSystem() string {
+	return runtime.GOOS
+}
+
+// IsMac 是否是Mac操作系统
+func IsMac() bool {
+	return GetSystem() == "darwin"
+}
+
+// IsWindows 是否是Windows系统
+func IsWindows() bool {
+	return GetSystem() == "windows"
+}
+
+// IsLinux 是否是Linux系统
+func IsLinux() bool {
+	return GetSystem() == "linux"
 }

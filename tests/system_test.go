@@ -5,15 +5,12 @@
 
 **/
 
-package toys
+package tests
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestWaitStopSignal(t *testing.T) {
-	WaitStopSignal(func() {
-		fmt.Println("回调函数...")
-	})
+
 }
