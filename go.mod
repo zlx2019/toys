@@ -1,4 +1,4 @@
-module toys
+module github.com/zlx2019/toys
 
 go 1.18
 
