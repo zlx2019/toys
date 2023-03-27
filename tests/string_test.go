@@ -9,8 +9,8 @@ package tests
 
 import (
 	"fmt"
+	"github.com/zlx2019/toys"
 	"testing"
-	"toys"
 )
 
 func TestString(t *testing.T) {
