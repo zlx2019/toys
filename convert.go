@@ -10,6 +10,7 @@ package toys
 import (
 	"bytes"
 	"encoding/binary"
+	"encoding/gob"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -54,7 +55,6 @@ func ToString(value any) string {
 	if value == nil {
 		return ""
 	}
-
 	switch val := value.(type) {
 	case float32:
 		return strconv.FormatFloat(float64(val), 'f', -1, 32)
@@ -93,7 +93,7 @@ func ToString(value any) string {
 	}
 }
 
-// ToJson Any 转换为 String
+// ToJson Any 转换为 Json
 func ToJson(value any) (string, error) {
 	result, err := json.Marshal(value)
 	if err != nil {
@@ -126,6 +126,64 @@ func ToInt(value any) (int64, error) {
 	default:
 		return result, err
 	}
+}
+
+// SliceToMap 切片 转换为 Map
+// T 切片元素类型
+// K Map-Key类型
+// V Map-Value类型
+// operator 实现K和V,分别使用T的哪些属性。
+func SliceToMap[T any, K comparable, V any](slice []T, operator func(T) (K, V)) map[K]V {
+	maps := make(map[K]V, len(slice))
+	for _, item := range slice {
+		k, v := operator(item)
+		maps[k] = v
+	}
+	return maps
+}
+
+// MapToSlice Map 转换为 切片
+func MapToSlice[T any, K comparable, V any](maps map[K]V, operator func(K, V) T) []T {
+	slice := make([]T, 0, len(maps))
+	for k, v := range maps {
+		slice = append(slice, operator(k, v))
+	}
+	return slice
+}
+
+// ToReadOnlyChannel 将一个切片异步转换成一个只读通道
+func ToReadOnlyChannel[T any](list []T) <-chan T {
+	channel := make(chan T, len(list))
+	go func() {
+		for _, item := range list {
+			channel <- item
+		}
+		close(channel)
+	}()
+	return channel
+}
+
+// EncoderBytes 将对象序列化为[]byte
+func EncoderBytes(value any) ([]byte, error) {
+	// 创建一个缓冲区
+	buffer := bytes.NewBuffer(nil)
+	// 创建一个编码器
+	encoder := gob.NewEncoder(buffer)
+	// 进行编码
+	if err := encoder.Encode(value); err != nil {
+		return nil, err
+	}
+	return buffer.Bytes(), nil
+}
+
+// DecoderBytes 将[]byte反序列化 到一个对象中
+func DecoderBytes(values []byte, target any) error {
+	// 创建一个缓冲区
+	buffer := bytes.NewBuffer(values)
+	// 创建一个解码器
+	decoder := gob.NewDecoder(buffer)
+	// 解码
+	return decoder.Decode(target)
 }
 
 //  数字类型转 []byte
