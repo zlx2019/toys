@@ -5,7 +5,7 @@
 
 **/
 
-package toys
+package valida
 
 import (
 	"encoding/json"

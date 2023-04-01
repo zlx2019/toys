@@ -5,7 +5,7 @@
 
 **/
 
-package toys
+package times
 
 import "time"
 

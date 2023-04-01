@@ -5,7 +5,7 @@
 
 **/
 
-package toys
+package text
 
 import "unicode/utf8"
 

@@ -9,7 +9,7 @@ package tests
 
 import (
 	"fmt"
-	"github.com/zlx2019/toys"
+	"github.com/zlx2019/toys/times"
 	"testing"
 	"time"
 )
@@ -22,5 +22,5 @@ func TestNow(t *testing.T) {
 	//fmt.Println(ParseDateTime(Now(),"2006-01-02 15:04:05"))
 	//fmt.Println(Format(time.Now()))
 
-	fmt.Println(toys.Format(toys.EndOfYear(time.Now())))
+	fmt.Println(times.Format(times.EndOfYear(time.Now())))
 }

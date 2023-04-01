@@ -8,13 +8,13 @@
 package tests
 
 import (
-	"github.com/zlx2019/toys"
+	"github.com/zlx2019/toys/maps"
 	"testing"
 )
 
 func TestForEach(t *testing.T) {
 	m := map[string]any{"name": "张三", "age": 18, "address": "广州"}
-	toys.ForEachMap(m, func(s string, a any) {
+	maps.ForEachMap(m, func(s string, a any) {
 
 	})
 }

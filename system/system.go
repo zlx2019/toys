@@ -5,7 +5,7 @@
 
 **/
 
-package toys
+package system
 
 import (
 	"os"

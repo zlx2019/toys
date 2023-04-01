@@ -9,7 +9,7 @@ package tests
 
 import (
 	"github.com/stretchr/testify/assert"
-	"github.com/zlx2019/toys"
+	"github.com/zlx2019/toys/clone"
 	"testing"
 )
 
@@ -49,9 +49,9 @@ func TestCopy(t *testing.T) {
 		Ignore:   "要忽略的字段",
 	}
 	p := &Person{}
-	toys.CopyProperties(&p, &u)
+	clone.CopyProperties(&p, &u)
 	is.True(u.Name == p.Name)
 
-	p2, _ := toys.CopyPropertiesTo[Person](&u)
+	p2, _ := clone.CopyPropertiesTo[Person](&u)
 	is.True(u.Name == p2.Name)
 }

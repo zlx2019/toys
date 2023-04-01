@@ -5,7 +5,7 @@
 
 **/
 
-package toys
+package random
 
 import (
 	"bytes"

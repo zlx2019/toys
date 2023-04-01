@@ -4,7 +4,7 @@
   @desc: 值拷贝相关函数库  参考 https://github.com/jinzhu/copier
 **/
 
-package toys
+package clone
 
 import "github.com/jinzhu/copier"
 

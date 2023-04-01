@@ -5,7 +5,7 @@
 
 **/
 
-package toys
+package slices
 
 import (
 	"math/rand"
