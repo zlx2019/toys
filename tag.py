@@ -26,6 +26,7 @@ def execute(*commands, timeout=None, encoding="utf-8"):
 
 ok, result = execute("git", "tag")
 if ok:
+    last_tag = ""
     if len(result) > 0:
         # 获取最后一个tag
         last_tag = result[-1]

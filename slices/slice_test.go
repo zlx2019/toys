@@ -5,12 +5,11 @@
 
 **/
 
-package tests
+package slices
 
 import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
-	"github.com/zlx2019/toys/slices"
 	"testing"
 )
 
@@ -22,11 +21,11 @@ func TestRemove(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
 
-	ints := slices.Remove([]int{1, 2, 3, 4, 5}, 2)
-	is.True(slices.EqualSlice(ints, []int{1, 2, 4, 5}))
+	ints := Remove([]int{1, 2, 3, 4, 5}, 2)
+	is.True(EqualSlice(ints, []int{1, 2, 4, 5}))
 
-	ints = slices.RemoveByElement(ints, 4)
-	is.True(slices.EqualSlice(ints, []int{1, 2, 5}))
+	ints = RemoveByElement(ints, 4)
+	is.True(EqualSlice(ints, []int{1, 2, 5}))
 }
 
 func TestFlatMap(t *testing.T) {
@@ -34,7 +33,7 @@ func TestFlatMap(t *testing.T) {
 	cxk := member{Hobby: []string{"打球", "唱", "跳", "rap"}}
 	lrj := member{Hobby: []string{"乒乓球", "足球", "篮球"}}
 	slice := []member{cxk, lrj}
-	hobbyList := slices.FlatMap(slice, func(m member) []string {
+	hobbyList := FlatMap(slice, func(m member) []string {
 		return m.Hobby
 	})
 	fmt.Println(hobbyList) // [打球 唱 跳 rap 乒乓球 足球 篮球]
@@ -46,7 +45,7 @@ func TestReduce(t *testing.T) {
 
 	numbers := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-	sum := slices.Reduce(numbers, 0, func(prev int, item int) int {
+	sum := Reduce(numbers, 0, func(prev int, item int) int {
 		return prev + item
 	})
 	is.Equal(sum, 55)

@@ -8,10 +8,16 @@
 package system
 
 import (
+	"bytes"
+	"github.com/zlx2019/toys/valida"
+	"golang.org/x/text/encoding/simplifiedchinese"
 	"os"
+	"os/exec"
 	"os/signal"
 	"runtime"
+	"strings"
 	"syscall"
+	"unicode/utf8"
 )
 
 // WaitSignal 阻塞等待系统信号
@@ -81,4 +87,79 @@ func IsWindows() bool {
 // IsLinux 是否是Linux系统
 func IsLinux() bool {
 	return GetSystem() == "linux"
+}
+
+// CommandOk 执行shell终端命令,只返回成功或者失败
+func CommandOk(commands ...string) bool {
+	command := strings.Join(commands, " ")
+	_, _, err := Command(command)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+// CommandLines 执行shell终端命令,如果成功则将结果转换为字符串行切片
+func CommandLines(commands ...string) ([]string, bool) {
+	command := strings.Join(commands, " ")
+	successResult, _, err := Command(command)
+	if err != nil {
+		return nil, false
+	}
+	return strings.Split(successResult, "\n"), true
+}
+
+// Command 执行shell终端命令
+// successResult 命令执行成功结果
+// failResult 命令执行失败结果
+func Command(command string) (successResult, failResult string, err error) {
+	// 成功结果内容
+	var successBuf bytes.Buffer
+	// 失败结果内容
+	var failBuf bytes.Buffer
+	// 创建终端
+	cmd := exec.Command("/bin/bash", "-c", command)
+	if IsWindows() {
+		cmd = exec.Command("powershell.exe", command)
+	}
+	// 将终端标准输出和错误输出 写入缓冲区
+	cmd.Stdout = &successBuf
+	cmd.Stderr = &failBuf
+	// 执行命令
+	err = cmd.Run()
+	if err != nil {
+		// 返回错误内容
+		if utf8.Valid(failBuf.Bytes()) {
+			failResult = byteToString(failBuf.Bytes(), "UTF8")
+		} else if valida.IsGBK(failBuf.Bytes()) {
+			failResult = byteToString(failBuf.Bytes(), "GBK")
+		}
+		return
+	}
+	datas := successBuf.Bytes()
+	if utf8.Valid(datas) {
+		successResult = byteToString(datas, "UTF8")
+	} else if valida.IsGBK(datas) {
+		successResult = byteToString(datas, "GBK")
+	}
+	return
+}
+
+// 根据指定的编码格式,将字节切片转为string。
+func byteToString(data []byte, charset string) string {
+	var result string
+	switch charset {
+	case "GBK":
+		decodeBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(data)
+		result = string(decodeBytes)
+	case "GB18030":
+		decodeBytes, _ := simplifiedchinese.GB18030.NewDecoder().Bytes(data)
+		result = string(decodeBytes)
+	case "UTF8":
+		fallthrough
+	default:
+		result = string(data)
+	}
+
+	return result
 }

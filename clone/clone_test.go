@@ -1,15 +1,14 @@
 /**
   @author: Zero
   @date: 2023/3/27 19:04:36
-  @desc:
+  @desc: clone 单元测试
 
 **/
 
-package tests
+package clone
 
 import (
 	"github.com/stretchr/testify/assert"
-	"github.com/zlx2019/toys/clone"
 	"testing"
 )
 
@@ -49,9 +48,9 @@ func TestCopy(t *testing.T) {
 		Ignore:   "要忽略的字段",
 	}
 	p := &Person{}
-	clone.CopyProperties(&p, &u)
+	CopyProperties(&p, &u)
 	is.True(u.Name == p.Name)
 
-	p2, _ := clone.CopyPropertiesTo[Person](&u)
+	p2, _ := CopyPropertiesTo[Person](&u)
 	is.True(u.Name == p2.Name)
 }

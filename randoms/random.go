@@ -5,7 +5,7 @@
 
 **/
 
-package random
+package randoms
 
 import (
 	"bytes"
@@ -23,6 +23,7 @@ const (
 func init() {
 	// 设置随机种子
 	rand.Seed(time.Now().UnixNano())
+	//rand.NewSource(time.Now().UnixNano())
 }
 
 // RandomRune 从一个rune切片中,随机挑选n个rune,生成一个string

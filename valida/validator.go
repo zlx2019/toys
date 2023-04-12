@@ -33,14 +33,12 @@ var (
 	base64Matcher        *regexp.Regexp = regexp.MustCompile(`^(?:[A-Za-z0-9+\\/]{4})*(?:[A-Za-z0-9+\\/]{2}==|[A-Za-z0-9+\\/]{3}=|[A-Za-z0-9+\\/]{4})$`)
 )
 
-// IsAlpha checks if the string contains only letters (a-zA-Z).
-// Play: https://go.dev/play/p/7Q5sGOz2izQ
+// IsAlpha 字符串是否只包含英文字母
 func IsAlpha(str string) bool {
 	return alphaMatcher.MatchString(str)
 }
 
-// IsAllUpper check if the string is all upper case letters A-Z.
-// Play: https://go.dev/play/p/ZHctgeK1n4Z
+// IsAllUpper 字符串是否全是大写英文字母
 func IsAllUpper(str string) bool {
 	for _, r := range str {
 		if !unicode.IsUpper(r) {
@@ -50,8 +48,7 @@ func IsAllUpper(str string) bool {
 	return str != ""
 }
 
-// IsAllLower check if the string is all lower case letters a-z.
-// Play: https://go.dev/play/p/GjqCnOfV6cM
+// IsAllLower 字符串是否全是小写英文字母
 func IsAllLower(str string) bool {
 	for _, r := range str {
 		if !unicode.IsLower(r) {
@@ -61,8 +58,7 @@ func IsAllLower(str string) bool {
 	return str != ""
 }
 
-// ContainUpper check if the string contain at least one upper case letter A-Z.
-// Play: https://go.dev/play/p/CmWeBEk27-z
+// ContainUpper 验证字符串是否包含至少一个英文大写字母
 func ContainUpper(str string) bool {
 	for _, r := range str {
 		if unicode.IsUpper(r) && unicode.IsLetter(r) {
@@ -72,8 +68,7 @@ func ContainUpper(str string) bool {
 	return false
 }
 
-// ContainLower check if the string contain at least one lower case letter a-z.
-// Play: https://go.dev/play/p/Srqi1ItvnAA
+// ContainLower 验证字符串是否包含至少一个英文小写字母。
 func ContainLower(str string) bool {
 	for _, r := range str {
 		if unicode.IsLower(r) && unicode.IsLetter(r) {
@@ -83,8 +78,7 @@ func ContainLower(str string) bool {
 	return false
 }
 
-// ContainLetter check if the string contain at least one letter.
-// Play: https://go.dev/play/p/lqFD04Yyewp
+// ContainLetter 字符串是否至少包含一个英文字母
 func ContainLetter(str string) bool {
 	return letterRegexMatcher.MatchString(str)
 }
@@ -177,14 +171,12 @@ func IsDns(dns string) bool {
 	return dnsMatcher.MatchString(dns)
 }
 
-// IsEmail check if the string is a email address.
-// Play: https://go.dev/play/p/Os9VaFlT33G
+// IsEmail 是否是电子邮箱
 func IsEmail(email string) bool {
 	return emailMatcher.MatchString(email)
 }
 
-// IsChineseMobile check if the string is chinese mobile number.
-// Play: https://go.dev/play/p/GPYUlGTOqe3
+// IsChineseMobile 验证字符串是否是中国手机号码
 func IsChineseMobile(mobileNum string) bool {
 	return chineseMobileMatcher.MatchString(mobileNum)
 }
@@ -195,8 +187,7 @@ func IsChineseIdNum(id string) bool {
 	return chineseIdMatcher.MatchString(id)
 }
 
-// ContainChinese check if the string contain mandarin chinese.
-// Play: https://go.dev/play/p/7DpU0uElYeM
+// ContainChinese 字符串是否包含中文字符
 func ContainChinese(s string) bool {
 	return chineseMatcher.MatchString(s)
 }
@@ -214,8 +205,7 @@ func IsCreditCard(creditCart string) bool {
 	return creditCardMatcher.MatchString(creditCart)
 }
 
-// IsBase64 check if the string is base64 string.
-// Play: https://go.dev/play/p/sWHEySAt6hl
+// IsBase64 字符串是否是base64编码
 func IsBase64(base64 string) bool {
 	return base64Matcher.MatchString(base64)
 }
