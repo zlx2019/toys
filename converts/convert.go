@@ -93,15 +93,6 @@ func ToString(value any) string {
 	}
 }
 
-// ToJson Any 转换为 Json
-func ToJson(value any) (string, error) {
-	result, err := json.Marshal(value)
-	if err != nil {
-		return "", err
-	}
-	return string(result), nil
-}
-
 // ToInt Any 转换为 Int
 func ToInt(value any) (int64, error) {
 	v := reflect.ValueOf(value)
@@ -186,7 +177,7 @@ func DecoderBytes(values []byte, target any) error {
 	return decoder.Decode(target)
 }
 
-//  数字类型转 []byte
+// 数字类型转 []byte
 func numeralToBytes(writeFunc func(writer io.Writer, order binary.ByteOrder, data interface{}) error, byteOrder binary.ByteOrder, value interface{}) ([]byte, error) {
 	buf := bytes.NewBuffer([]byte{})
 	err := writeFunc(buf, byteOrder, value)

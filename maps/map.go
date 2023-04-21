@@ -25,9 +25,18 @@ func Values[M ~map[K]V, K comparable, V any](maps M) []V {
 	return values
 }
 
-// ForEachMap 遍历map的元素,通过action函数进行处理.
-func ForEachMap[M ~map[K]V, K comparable, V any](maps M, action func(K, V)) {
+// ForEach 遍历map的元素,通过action函数进行处理.
+func ForEach[M ~map[K]V, K comparable, V any](maps M, action func(K, V)) {
 	for k, v := range maps {
 		action(k, v)
 	}
+}
+
+// Map 遍历map的元素,通过action函数进行处理,并返回处理后的结果.
+func Map[M ~map[K]V, K comparable, V any](maps M, action func(K, V) V) []V {
+	values := make([]V, len(maps))
+	for k, v := range maps {
+		values = append(values, action(k, v))
+	}
+	return values
 }

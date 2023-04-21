@@ -8,12 +8,13 @@
 package maps
 
 import (
+	"fmt"
 	"testing"
 )
 
 func TestForEach(t *testing.T) {
 	m := map[string]any{"name": "张三", "age": 18, "address": "广州"}
-	ForEachMap(m, func(s string, a any) {
-
+	ForEach(m, func(key string, value any) {
+		fmt.Println(key, value)
 	})
 }
