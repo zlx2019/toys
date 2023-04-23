@@ -48,9 +48,9 @@ func TestCopy(t *testing.T) {
 		Ignore:   "要忽略的字段",
 	}
 	p := &Person{}
-	CopyProperties(&p, &u)
+	CopyPropertiesTo(&p, &u)
 	is.True(u.Name == p.Name)
 
-	p2, _ := CopyPropertiesTo[Person](&u)
+	p2, _ := CopyProperties[Person](&u)
 	is.True(u.Name == p2.Name)
 }

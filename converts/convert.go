@@ -11,12 +11,12 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/gob"
-	"encoding/json"
 	"fmt"
 	"io"
 	"math"
 	"reflect"
 	"strconv"
+	"unsafe"
 )
 
 // StringToBool String 转换为 Bool
@@ -45,7 +45,7 @@ func ToBytes(value any) ([]byte, error) {
 	case float64:
 		return floatToBytes(v.Float())
 	default:
-		newValue, err := json.Marshal(value)
+		newValue, err := AnyToJsonBytes(value)
 		return newValue, err
 	}
 }
@@ -85,7 +85,7 @@ func ToString(value any) string {
 	case []byte:
 		return string(val)
 	default:
-		b, err := json.Marshal(val)
+		b, err := AnyToJson(val)
 		if err != nil {
 			return ""
 		}
@@ -175,6 +175,19 @@ func DecoderBytes(values []byte, target any) error {
 	decoder := gob.NewDecoder(buffer)
 	// 解码
 	return decoder.Decode(target)
+}
+
+// StringToBytes 通过unsafe将String序列化为[]byte。性能高
+func StringToBytes(value string) []byte {
+	return *(*[]byte)(unsafe.Pointer(&struct {
+		string
+		Cap int
+	}{value, len(value)}))
+}
+
+// BytesToString 通过unsafe将[]byte反序列化为String。性能非常高
+func BytesToString(bytes []byte) string {
+	return *(*string)(unsafe.Pointer(&bytes))
 }
 
 // 数字类型转 []byte

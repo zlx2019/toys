@@ -16,17 +16,17 @@ var defaultOption = copier.Option{
 	DeepCopy: true,
 }
 
-// CopyProperties 结构体深拷贝
+// CopyPropertiesTo 结构体深拷贝
 // 如果字段名不同,通过`copier:"Alias"` 指定为同一个tag,别名必须大写开头
-func CopyProperties(target, source any) error {
+func CopyPropertiesTo(target, source any) error {
 	return copier.CopyWithOption(target, source, defaultOption)
 }
 
-// CopyPropertiesTo 通过拷贝一个旧对象,生成一个新的对象
-func CopyPropertiesTo[T any](source any) (*T, error) {
+// CopyProperties 通过拷贝一个旧对象,生成一个新的对象
+func CopyProperties[T any](source any) (T, error) {
 	var target T
-	if err := CopyProperties(&target, source); err != nil {
-		return nil, err
+	if err := CopyPropertiesTo(&target, source); err != nil {
+		return target, err
 	}
-	return &target, nil
+	return target, nil
 }

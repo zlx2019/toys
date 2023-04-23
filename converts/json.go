@@ -13,11 +13,33 @@ import (
 	"strings"
 )
 
+const JsonTag = "json"
+
 var coder jsoniter.API
 
-// 初始化 JSON序列化器配置
+// 初始化 自定义JSON序列化器配置
 func init() {
-	coder = jsoniter.ConfigCompatibleWithStandardLibrary
+	coder = jsoniter.Config{
+		// 控制 JSON 格式化时每个缩进级别的空格数,默认为0
+		IndentionStep: 0,
+		//指定是否按字典序对 Map 的键进行排序。默认为 false
+		SortMapKeys: false,
+		// 指定是否对 HTML 特殊字符进行转义。
+		EscapeHTML: true,
+		// ：指定是否将数字解码为 Go 内置的 Number 类型而不是 float64。
+		UseNumber: true,
+		//指定在结构体字段中查找的 JSON 标签的名称。
+		TagKey: JsonTag,
+		// 指定是否只解析具有 json(TagKey) 标记的结构体字段。
+		// 如果为false,则解析所有字段，包括未标记的字段,默认使用变量名作为json字段名
+		OnlyTaggedField: false,
+		// 指定是否验证 json.RawMessage 是否有效。
+		ValidateJsonRawMessage: true,
+		// 指定是否将结构体字段视为简单字符串类型，即不进行解码，而是直接将其作为字符串返回
+		ObjectFieldMustBeSimpleString: false,
+		// 指定是否区分字段名大小写。
+		CaseSensitive: false,
+	}.Froze()
 }
 
 // AnyToJson 将任意类型转换为JSON字符串
@@ -104,10 +126,13 @@ func GetJsonNodeFromPaths(json string, paths ...string) (string, error) {
 // 将一个字符串根据`.`分割成切片,并且将切片中的每个元素转换为interface{}
 // 例如: "a.b.c" -> []interface{}{"a","b","c"}
 func nodePathSplit(keyPath string) []interface{} {
+	if !strings.Contains(keyPath, ".") {
+		return []interface{}{keyPath}
+	}
 	paths := strings.Split(keyPath, ".")
-	var keys []interface{}
-	for _, path := range paths {
-		keys = append(keys, path)
+	var keys = make([]interface{}, len(paths))
+	for i, path := range paths {
+		keys[i] = path
 	}
 	return keys
 }
