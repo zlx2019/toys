@@ -12,12 +12,12 @@ type Integer interface {
 	Signed | Unsigned
 }
 
-// Signed 无符号整型
+// Signed 有符号整型
 type Signed interface {
 	~int | ~int8 | ~int16 | ~int32 | ~int64
 }
 
-// Unsigned 有符号整型
+// Unsigned 无符号整型
 type Unsigned interface {
 	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
 }

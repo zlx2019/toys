@@ -9,7 +9,9 @@ package converts
 
 import (
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"testing"
+	"unsafe"
 )
 
 func TestAnyToBytes(t *testing.T) {
@@ -51,9 +53,55 @@ func TestEncoderAndDecoder(t *testing.T) {
 		Age:  22,
 	}
 	bytes, _ := EncoderBytes(u)
-
 	u2 := &Users{}
 	DecoderBytes(bytes, u2)
 	fmt.Println(u)  //&{满城雪 22}
 	fmt.Println(u2) //&{满城雪 22}
+}
+
+// int 与 []byte 互转
+func TestIntAndBytesConvert(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	// int
+	var num = 150
+	bytes, err := IntegerToBytes(num)
+	fmt.Println(unsafe.Sizeof(num))
+	is.NoError(err)
+	result, err := BytesToInteger[int64](bytes)
+	is.NoError(err)
+	is.Equal(int64(num), result)
+
+	//int8
+	var num2 int8 = 100
+	bytes, err = IntegerToBytes(num2)
+	is.NoError(err)
+	result2, err := BytesToInteger[int8](bytes)
+	is.NoError(err)
+	is.Equal(num2, result2)
+
+	//int16
+	var num3 int16 = 10012
+	bytes, err = IntegerToBytes(num3)
+	is.NoError(err)
+	result3, err := BytesToInteger[int16](bytes)
+	is.NoError(err)
+	is.Equal(num3, result3)
+
+	//int32
+	var num4 int32 = 10012
+	bytes, err = IntegerToBytes(num4)
+	is.NoError(err)
+	result4, err := BytesToInteger[int32](bytes)
+	is.NoError(err)
+	is.Equal(num4, result4)
+
+	//int64
+	var num5 int64 = 10012
+	bytes, err = IntegerToBytes(num5)
+	is.NoError(err)
+	result5, err := BytesToInteger[int64](bytes)
+	is.NoError(err)
+	is.Equal(num5, result5)
 }

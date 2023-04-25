@@ -12,7 +12,7 @@ import (
 	"encoding/binary"
 	"encoding/gob"
 	"fmt"
-	"io"
+	"github.com/zlx2019/toys"
 	"math"
 	"reflect"
 	"strconv"
@@ -24,7 +24,7 @@ func StringToBool(value string) (bool, error) {
 	return strconv.ParseBool(value)
 }
 
-// ToBytes Any 转换为 []byte
+// ToBytes Any任意类型 转换为 []byte
 func ToBytes(value any) ([]byte, error) {
 	// 通过反射获取到value的值
 	v := reflect.ValueOf(value)
@@ -33,17 +33,31 @@ func ToBytes(value any) ([]byte, error) {
 	case bool:
 		return strconv.AppendBool([]byte{}, v.Bool()), nil
 	case string:
-		return []byte(v.String()), nil
+		return StringToBytes(v.String()), nil
 	case []byte:
 		return v.Bytes(), nil
-	case int, int8, int16, int32, int64:
-		return numeralToBytes(binary.Write, binary.BigEndian, v.Int())
-	case uint, uint8, uint16, uint32, uint64:
-		return numeralToBytes(binary.Write, binary.BigEndian, v.Uint())
-	case float32:
-		return floatToBytes(v.Float())
-	case float64:
-		return floatToBytes(v.Float())
+	// Int类型处理
+	case int, int64:
+		// int 强转为int64处理
+		return IntegerToBytes(v.Int())
+	case int8:
+		return IntegerToBytes(int8(v.Int()))
+	case int16:
+		return IntegerToBytes(int16(v.Int()))
+	case int32:
+		return IntegerToBytes(int32(v.Int()))
+	// uint类型处理
+	case uint, uint64:
+		// uint直接强转uint64处理
+		return IntegerToBytes(v.Uint())
+	case uint8:
+		return IntegerToBytes(uint8(v.Uint()))
+	case uint16:
+		return IntegerToBytes(uint16(v.Uint()))
+	case uint32:
+		return IntegerToBytes(uint32(v.Uint()))
+	case float32, float64:
+		return FloatToBytes(v.Float())
 	default:
 		newValue, err := AnyToJsonBytes(value)
 		return newValue, err
@@ -83,7 +97,7 @@ func ToString(value any) string {
 	case string:
 		return val
 	case []byte:
-		return string(val)
+		return BytesToString(val)
 	default:
 		b, err := AnyToJson(val)
 		if err != nil {
@@ -190,17 +204,60 @@ func BytesToString(bytes []byte) string {
 	return *(*string)(unsafe.Pointer(&bytes))
 }
 
-// 数字类型转 []byte
-func numeralToBytes(writeFunc func(writer io.Writer, order binary.ByteOrder, data interface{}) error, byteOrder binary.ByteOrder, value interface{}) ([]byte, error) {
-	buf := bytes.NewBuffer([]byte{})
-	err := writeFunc(buf, byteOrder, value)
-	return buf.Bytes(), err
+// IntegerToBytes Int~ | uint~ 类型转为 []byte
+func IntegerToBytes[T toys.Integer](value T) ([]byte, error) {
+	// 通过反射获取value的类型
+	valueType := reflect.TypeOf(value).Kind()
+	switch valueType {
+	case reflect.Int:
+		// 由于int是不固定字节大小类型,所以导致无法写入缓冲区
+		// 统一将int类型转为int64固定大小字节类型再转换
+		return intAndUintToBytes(int64(value))
+	case reflect.Uint:
+		// 由于uint是不固定字节大小类型,所以导致无法写入缓冲区
+		// 统一将int类型转为uint64固定大小字节类型再转换
+		return intAndUintToBytes(uint64(value))
+	default:
+		// 其余类型直接转换即可
+		return intAndUintToBytes(value)
+	}
 }
 
-// float类型转 []byte
-func floatToBytes(value float64) ([]byte, error) {
+// BytesToInteger []byte类型转为Int~类型
+func BytesToInteger[T toys.Integer](value []byte) (T, error) {
+	// 将字节数组读取到缓冲区
+	buffer := bytes.NewBuffer(value)
+	// 创建返回值
+	var result T
+	// 将数据写入返回值
+	if err := binary.Read(buffer, binary.BigEndian, &result); err != nil {
+		return result, err
+	}
+	return result, nil
+}
+
+// intAndUintToBytes int~ | uint~ 转为 []byte类型
+func intAndUintToBytes[T toys.Integer](value T) ([]byte, error) {
+	// 根据类型的字节大小,并且创建缓冲区
+	buffer := bytes.NewBuffer(make([]byte, unsafe.Sizeof(value)))
+	// 将数据写入到缓冲区
+	if err := binary.Write(buffer, binary.BigEndian, value); err != nil {
+		return nil, err
+	}
+	// 返回缓冲区数据字节
+	return buffer.Bytes(), nil
+}
+
+// FloatToBytes float64类型转 []byte
+func FloatToBytes(value float64) ([]byte, error) {
 	bits := math.Float64bits(value)
 	bytes := make([]byte, 8)
 	binary.BigEndian.PutUint64(bytes, bits)
 	return bytes, nil
+}
+
+// BytesToFloat []byte 转float64
+func BytesToFloat(value []byte) float64 {
+	bits := binary.LittleEndian.Uint64(value)
+	return math.Float64frombits(bits)
 }
