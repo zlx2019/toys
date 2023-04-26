@@ -9,6 +9,7 @@ package system
 
 import (
 	"bytes"
+	"github.com/zlx2019/toys/slices"
 	"github.com/zlx2019/toys/valida"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"os"
@@ -106,7 +107,10 @@ func CommandLines(commands ...string) ([]string, bool) {
 	if err != nil {
 		return nil, false
 	}
-	return strings.Split(successResult, "\n"), true
+	lines := slices.Filter(strings.Split(successResult, "\n"), func(item string) bool {
+		return item != ""
+	})
+	return lines, true
 }
 
 // Command 执行shell终端命令

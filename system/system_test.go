@@ -27,5 +27,5 @@ func TestCommand(t *testing.T) {
 
 	lines, ok := CommandLines("ls")
 	is.True(ok)
-	is.Equal(len(lines), 9)
+	is.Equal(len(lines), 2)
 }
