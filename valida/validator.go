@@ -83,15 +83,13 @@ func ContainLetter(str string) bool {
 	return letterRegexMatcher.MatchString(str)
 }
 
-// IsJSON checks if the string is valid JSON.
-// Play: https://go.dev/play/p/sRS6c4K8jGk
+// IsJSON 检查字符串是否为有效的JSON。
 func IsJSON(str string) bool {
 	var js json.RawMessage
 	return json.Unmarshal([]byte(str), &js) == nil
 }
 
-// IsNumberStr check if the string can convert to a number.
-// Play: https://go.dev/play/p/LzaKocSV79u
+// IsNumberStr 检查字符串是否可以转换为数字。
 func IsNumberStr(s string) bool {
 	return IsIntStr(s) || IsFloatStr(s)
 }
@@ -109,15 +107,13 @@ func IsIntStr(str string) bool {
 	return intStrMatcher.MatchString(str)
 }
 
-// IsIp check if the string is a ip address.
-// Play: https://go.dev/play/p/FgcplDvmxoD
+// IsIp 检查字符串是否为 IP 地址。
 func IsIp(ipstr string) bool {
 	ip := net.ParseIP(ipstr)
 	return ip != nil
 }
 
-// IsIpV4 check if the string is a ipv4 address.
-// Play: https://go.dev/play/p/zBGT99EjaIu
+// IsIpV4 检查字符串是否为 IPv4 地址。
 func IsIpV4(ipstr string) bool {
 	ip := net.ParseIP(ipstr)
 	if ip == nil {
@@ -126,8 +122,7 @@ func IsIpV4(ipstr string) bool {
 	return strings.Contains(ipstr, ".")
 }
 
-// IsIpV6 check if the string is a ipv6 address.
-// Play: https://go.dev/play/p/AHA0r0AzIdC
+// IsIpV6 检查字符串是否为 IPv6 地址。
 func IsIpV6(ipstr string) bool {
 	ip := net.ParseIP(ipstr)
 	if ip == nil {
@@ -136,8 +131,7 @@ func IsIpV6(ipstr string) bool {
 	return strings.Contains(ipstr, ":")
 }
 
-// IsPort check if the string is a valid net port.
-// Play:
+// IsPort 检查字符串是否为有效的网络端口。
 func IsPort(str string) bool {
 	if i, err := strconv.ParseInt(str, 10, 64); err == nil && i > 0 && i < 65536 {
 		return true
@@ -145,8 +139,7 @@ func IsPort(str string) bool {
 	return false
 }
 
-// IsUrl check if the string is url.
-// Play: https://go.dev/play/p/pbJGa7F98Ka
+// IsUrl 检查字符串是否为 URL。
 func IsUrl(str string) bool {
 	if str == "" || len(str) >= 2083 || len(str) <= 3 || strings.HasPrefix(str, ".") {
 		return false
@@ -247,9 +240,8 @@ func IsStrongPassword(password string, length int) bool {
 	return num && lower && upper && special
 }
 
-// IsWeakPassword check if the string is weak password
-// Weak password: only letter or only number or letter + number.
-// Play: https://go.dev/play/p/wqakscZH5gH
+// IsWeakPassword 检查字符串是否为弱密码
+// Weak password: 只有字母或只有数字或字母+数字。
 func IsWeakPassword(password string) bool {
 	var num, letter, special bool
 	for _, r := range password {
@@ -266,22 +258,20 @@ func IsWeakPassword(password string) bool {
 	return (num || letter) && !special
 }
 
-// IsZeroValue checks if value is a zero value.
-// Play: https://go.dev/play/p/UMrwaDCi_t4
+// IsZeroValue 判断一个值是否为该类型的默认零值
 func IsZeroValue(value any) bool {
 	if value == nil {
 		return true
 	}
-
+	// 获取值的信息
 	rv := reflect.ValueOf(value)
+	// 如果这个值为指针类型,则获取指针的值
 	if rv.Kind() == reflect.Ptr {
 		rv = rv.Elem()
 	}
-
 	if !rv.IsValid() {
 		return true
 	}
-
 	switch rv.Kind() {
 	case reflect.String:
 		return rv.Len() == 0
@@ -296,7 +286,6 @@ func IsZeroValue(value any) bool {
 	case reflect.Ptr, reflect.Chan, reflect.Func, reflect.Interface, reflect.Slice, reflect.Map:
 		return rv.IsNil()
 	}
-
 	return reflect.DeepEqual(rv.Interface(), reflect.Zero(rv.Type()).Interface())
 }
 

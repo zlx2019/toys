@@ -99,11 +99,11 @@ func ToString(value any) string {
 	case []byte:
 		return BytesToString(val)
 	default:
-		b, err := AnyToJson(val)
+		str, err := AnyToJson(val)
 		if err != nil {
 			return ""
 		}
-		return string(b)
+		return str
 	}
 }
 
@@ -130,6 +130,52 @@ func ToInt(value any) (int64, error) {
 		return result, err
 	default:
 		return result, err
+	}
+}
+
+// ToBool 判断一个值是否为零值。
+// 将任意值转换为Bool(值为`类型零值`则为false)
+// 指针类型 == nil为false，反之true
+// int~ | uint~ | float~ | complex等类型 !=0 则为true,反之false
+func ToBool(value any) bool {
+	if value == nil {
+		return false
+	}
+	v := reflect.ValueOf(value)
+	// 如果时指针类型
+	if v.Kind() == reflect.Pointer {
+		if v.IsNil() {
+			return true
+		}
+		//不为Nil则获取指针所指向的具体值
+		v = v.Elem()
+	}
+	// 断言值类型
+	switch v.Kind() {
+	case reflect.Bool:
+		return v.Bool()
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return v.Int() != 0
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		return v.Int() != 0
+	case reflect.Float32, reflect.Float64:
+		return v.Float() != 0
+	case reflect.Complex64, reflect.Complex128:
+		return v.Complex() != 0
+	case reflect.String:
+		return v.String() != ""
+	case reflect.Slice, reflect.Array, reflect.Map:
+		return v.Len() != 0
+	case reflect.Interface:
+		itf := v.Interface()
+		switch val := itf.(type) {
+		case interface{ IsZero() bool }:
+			return val.IsZero()
+		default:
+			return val != nil
+		}
+	default:
+		return false
 	}
 }
 

@@ -1,0 +1,7 @@
+{
+  "name": "张三",
+  "age": 18,
+  "locked": false,
+  "hobby": ["篮球","唱","跳"],
+  "info": {"address": "北京","sex": "男"}
+}

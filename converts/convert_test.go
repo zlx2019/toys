@@ -105,3 +105,9 @@ func TestIntAndBytesConvert(t *testing.T) {
 	is.NoError(err)
 	is.Equal(num5, result5)
 }
+
+func TestToBool(t *testing.T) {
+	var i interface{}
+	i = 1
+	fmt.Println(ToBool(i))
+}

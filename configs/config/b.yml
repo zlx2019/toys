@@ -1,0 +1,10 @@
+name: 张三
+age: 18
+locked: false
+hobby:
+  - 唱
+  - 跳
+  - Rap
+info:
+  address: 北京
+  sex: 女
