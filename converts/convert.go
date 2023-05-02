@@ -142,12 +142,12 @@ func ToBool(value any) bool {
 		return false
 	}
 	v := reflect.ValueOf(value)
-	// 如果时指针类型
+	// 如果是指针类型
 	if v.Kind() == reflect.Pointer {
 		if v.IsNil() {
 			return true
 		}
-		//不为Nil则获取指针所指向的具体值
+		//不为Nil则获取指针所指向的具体值的类型
 		v = v.Elem()
 	}
 	// 断言值类型
