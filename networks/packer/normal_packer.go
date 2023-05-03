@@ -9,7 +9,7 @@ package packer
 
 import (
 	"encoding/binary"
-	"github.com/zlx2019/toys/network/protocol"
+	"github.com/zlx2019/toys/networks/protocol"
 	"io"
 	"net"
 	"time"

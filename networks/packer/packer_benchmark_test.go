@@ -9,7 +9,7 @@ package packer
 
 import (
 	"bytes"
-	"github.com/zlx2019/toys/network/protocol"
+	"github.com/zlx2019/toys/networks/protocol"
 	"testing"
 )
 

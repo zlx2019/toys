@@ -11,7 +11,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/stretchr/testify/assert"
-	"github.com/zlx2019/toys/network/protocol"
+	"github.com/zlx2019/toys/networks/protocol"
 	"net"
 	"testing"
 	"time"

@@ -13,6 +13,9 @@ import (
 	"encoding/gob"
 	"fmt"
 	"github.com/zlx2019/toys"
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/transform"
+	"io"
 	"math"
 	"reflect"
 	"strconv"
@@ -306,4 +309,19 @@ func FloatToBytes(value float64) ([]byte, error) {
 func BytesToFloat(value []byte) float64 {
 	bits := binary.LittleEndian.Uint64(value)
 	return math.Float64frombits(bits)
+}
+
+// GBKToUTF8 GBK格式字节切片,转换为UTF8格式
+func GBKToUTF8(bytes []byte) ([]byte, error) {
+	return simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
+}
+
+// GBKToUTF8Reader 将一个GBK格式Reader,转换为utf-8格式的Reader
+func GBKToUTF8Reader(reader io.Reader) io.Reader {
+	return transform.NewReader(reader, simplifiedchinese.GBK.NewDecoder())
+}
+
+// UTF8ToGBK UTF8格式字节切片,转换为GBK格式
+func UTF8ToGBK(bytes []byte) ([]byte, error) {
+	return simplifiedchinese.GBK.NewEncoder().Bytes(bytes)
 }
