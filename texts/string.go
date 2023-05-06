@@ -13,6 +13,19 @@ import (
 	"unicode/utf8"
 )
 
+// NotEmpty 字符串是否非空
+func NotEmpty(str string) bool {
+	return !IsEmpty(str)
+}
+
+// IsEmpty 字符串是否为空
+func IsEmpty(str string) bool {
+	if len(str) <= 0 {
+		return true
+	}
+	return false
+}
+
 // RuneCount 统计一个字符串的字符数量(包含中文)
 func RuneCount(content string) int {
 	return utf8.RuneCountInString(content)
