@@ -58,7 +58,7 @@ func BenchmarkAnyToJson(b *testing.B) {
 
 // 基准测试 使用标准库来序列化结构体
 func BenchmarkStdAnyToJson(b *testing.B) {
-	u := &UserStruct{
+	u := &JsonStruct{
 		UserName: "满城雪",
 		NickName: "海问香",
 		Age:      19,
@@ -71,6 +71,7 @@ func BenchmarkStdAnyToJson(b *testing.B) {
 			Name: "小张同学",
 			Age:  16,
 		},
+		Hobby: []string{"唱", "跳", "rap"},
 	}
 	for i := 0; i < b.N; i++ {
 		json.Marshal(&u)

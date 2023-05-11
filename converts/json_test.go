@@ -25,6 +25,7 @@ type JsonStruct struct {
 		Name string `json:"stu_name"`
 		Age  int    `json:"stu_age"`
 	} `json:"student"`
+	Hobby []string `json:"hobby"`
 }
 
 // 测试 结构体序列化为Json

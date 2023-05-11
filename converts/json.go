@@ -40,6 +40,7 @@ func init() {
 		// 指定是否区分字段名大小写。
 		CaseSensitive: false,
 	}.Froze()
+
 }
 
 // AnyToJson 将任意类型转换为JSON字符串

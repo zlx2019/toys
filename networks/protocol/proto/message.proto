@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+//生成的go文件 package路径
+option go_package = "protocol/";
+
+// 传输的数据包结构体-Protobuf版
+message ProtoMessage{
+  //  消息ID
+  uint64 ID = 1;
+  //  数据载体
+  bytes  Payload = 2;
+}
