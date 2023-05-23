@@ -28,7 +28,7 @@ func TestGetIPAddressName(t *testing.T) {
 	// 获取本机公网IP地址
 	name, err := GetLocalAddressName()
 	is.NoError(err)
-	is.Equal(name, "香港")
+	is.Equal(name, "美国")
 
 	// 根据IP 获取地址名称
 	name, err = GetIPAddressName("66.150.130.201")

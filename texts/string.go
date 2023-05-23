@@ -10,8 +10,19 @@ package texts
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"unicode/utf8"
 )
+
+// IsBlank 字符串是否为空串
+func IsBlank(str string) bool {
+	return IsEmpty(str) || len(strings.TrimSpace(str)) == 0
+}
+
+// NotBlank 字符串是否为非空串
+func NotBlank(str string) bool {
+	return !IsBlank(str)
+}
 
 // NotEmpty 字符串是否非空
 func NotEmpty(str string) bool {
@@ -20,7 +31,7 @@ func NotEmpty(str string) bool {
 
 // IsEmpty 字符串是否为空
 func IsEmpty(str string) bool {
-	if len(str) <= 0 {
+	if str == "" {
 		return true
 	}
 	return false
@@ -32,9 +43,9 @@ func RuneCount(content string) int {
 }
 
 // Format 字符串格式化
-//func Format(template string,values ...any) string {
-//	return fmt.Sprintf(template,values)
-//}
+func Format(template string, values ...any) string {
+	return fmt.Sprintf(template, values...)
+}
 
 // ChunkString 将一个字符串切片 按数量分割成多份
 func ChunkString[T ~string](str T, size int) []T {

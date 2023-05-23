@@ -15,7 +15,7 @@ import (
 
 // 测试下载网络文件
 func TestDownloadFile(t *testing.T) {
-	err := DownloadFile("new.png", "https://zlx2019.github.io/img/logo/Vertx-logo.png")
+	err := DownloadFile("Default4.jpg", "https://limestart-assets.retiehe.com/wallpapers/Default4.jpg")
 	assert.New(t).NoError(err)
 }
 

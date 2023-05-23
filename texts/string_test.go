@@ -30,3 +30,22 @@ func TestEditDistance(t *testing.T) {
 	s4 := "1234"
 	is.Equal(ComputeStrSimilarity(s3, s4), float64(0.8))
 }
+
+func TestFormat(t *testing.T) {
+	format := Format("%s", "hello")
+	fmt.Println(format)
+}
+
+func TestEmptyAndBlank(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+	is.True(IsEmpty(""))
+	is.False(IsEmpty(" "))
+	is.True(NotEmpty("  "))
+
+	is.True(IsBlank(""))
+	is.True(IsBlank("  "))
+
+	is.True(NotBlank("  123  "))
+	is.False(NotBlank(""))
+}

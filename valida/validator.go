@@ -16,6 +16,7 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 )
 
 var (
@@ -289,21 +290,7 @@ func IsZeroValue(value any) bool {
 	return reflect.DeepEqual(rv.Interface(), reflect.Zero(rv.Type()).Interface())
 }
 
-// IsGBK check if data encoding is gbk
-// Note: this function is implemented by whether double bytes fall within the encoding range of gbk,
-// while each byte of utf-8 encoding format falls within the encoding range of gbk.
-// Therefore, utf8.valid() should be called first to check whether it is not utf-8 encoding,
-// and then call IsGBK() to check gbk encoding. like below
-/**
-	data := []byte("你好")
-	if utf8.Valid(data) {
-		fmt.Println("data encoding is utf-8")
-	}else if(IsGBK(data)) {
-		fmt.Println("data encoding is GBK")
-	}
-	fmt.Println("data encoding is unknown")
-**/
-// Play: https://go.dev/play/p/E2nt3unlmzP
+// IsGBK 检查数据编码是否为 GBK
 func IsGBK(data []byte) bool {
 	i := 0
 	for i < len(data) {
@@ -325,4 +312,33 @@ func IsGBK(data []byte) bool {
 	}
 
 	return true
+}
+
+// IsUTF8 判断一个 []byte| string | rune 是否是合法的utf-8编码格式
+func IsUTF8[T []byte | string | rune](value T) bool {
+	v := reflect.ValueOf(value)
+	switch v.Kind() {
+	case reflect.String:
+		return utf8.ValidString(v.String())
+	case reflect.Int32:
+		// rune
+		// int64 to rune
+		r := rune(v.Int())
+		return utf8.ValidRune(r)
+	case reflect.Slice:
+		// []byte
+		// 获取切片的元素类型
+		elemKind := v.Type().Elem().Kind()
+		// 判断该切片的元素是否是byte(uint8)类型
+		if elemKind == reflect.Uint8 {
+			return utf8.Valid(v.Bytes())
+		}
+	}
+	return false
+}
+
+// IsFullUTF8 判断该字节序列是否包含完整的UTF-8编码的字符
+// 通常需要先校验utf8是否合法,再调用该方法进一步校验
+func IsFullUTF8(value []byte) bool {
+	return utf8.FullRune(value)
 }

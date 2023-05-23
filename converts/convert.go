@@ -13,12 +13,15 @@ import (
 	"encoding/gob"
 	"fmt"
 	"github.com/zlx2019/toys"
+	"github.com/zlx2019/toys/valida"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
 	"io"
 	"math"
 	"reflect"
 	"strconv"
+	"strings"
+	"unicode/utf8"
 	"unsafe"
 )
 
@@ -324,4 +327,30 @@ func GBKToUTF8Reader(reader io.Reader) io.Reader {
 // UTF8ToGBK UTF8格式字节切片,转换为GBK格式
 func UTF8ToGBK(bytes []byte) ([]byte, error) {
 	return simplifiedchinese.GBK.NewEncoder().Bytes(bytes)
+}
+
+// BytesToRunes utf8字节序列 转为 rune序列
+func BytesToRunes(bytes []byte) []rune {
+	// 非utf8格式直接返回空序列
+	if !valida.IsUTF8(bytes) {
+		return []rune{}
+	}
+	var runes []rune
+	for len(bytes) > 0 {
+		// 循环读取每一个utf8格式数据
+		r, size := utf8.DecodeRune(bytes)
+		runes = append(runes, r)
+		// 去除已经读取过的字节
+		bytes = bytes[size:]
+	}
+	return runes
+}
+
+// RunesToString rune序列转为string
+func RunesToString(runes []rune) string {
+	build := strings.Builder{}
+	for _, item := range runes {
+		build.WriteRune(item)
+	}
+	return build.String()
 }

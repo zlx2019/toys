@@ -111,3 +111,12 @@ func TestToBool(t *testing.T) {
 	i = 1
 	fmt.Println(ToBool(i))
 }
+
+func TestBytesToRunesAndToString(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+	bytes := []byte("Hello,你好")
+	runes := BytesToRunes(bytes)
+	str := RunesToString(runes)
+	is.Equal(str, "Hello,你好")
+}
