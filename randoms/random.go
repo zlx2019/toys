@@ -9,6 +9,7 @@ package randoms
 
 import (
 	"bytes"
+	"github.com/google/uuid"
 	"math/rand"
 	"time"
 )
@@ -24,6 +25,11 @@ func init() {
 	// 设置随机种子
 	rand.Seed(time.Now().UnixNano())
 	//rand.NewSource(time.Now().UnixNano())
+}
+
+// RandomUUID 生成一个uuid
+func RandomUUID() string {
+	return uuid.New().String()
 }
 
 // RandomRune 从一个rune切片中,随机挑选n个rune,生成一个string
